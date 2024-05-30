@@ -2,20 +2,26 @@ import { Image, Pressable, StyleSheet } from "react-native";
 import { Text, View } from "./Themed";
 import { FontAwesome } from "@expo/vector-icons";
 import { Link } from "expo-router";
+import { Product } from "@vsf-enterprise/sap-commerce-webservices-sdk";
+import { transformImageUrl } from "@/utils/transformImage";
 
-export default function ProductCard() {
+export default function ProductCard({
+  product,
+}: {
+  product: Product;
+}) {
   return (
     <Link href={{
-      pathname: "Product Details/[product_code]/[product_title]",
-      params: { product_code: 1, product_title: 1 },
+      pathname: "Product Details/[product_code]",
+      params: { product_code: product.code },
     }}>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image source={{ uri: '' }} style={styles.image} />
+          <Image source={{ uri: transformImageUrl(product.firstVariantImage!) }} style={styles.image} />
         </View>
         <View style={styles.detailsContainer}>
-          <Text style={styles.title}>Name Placeholder</Text>
-          <Text style={styles.price}>$0.00</Text>
+          <Text style={styles.title}>{product.name}</Text>
+          <Text style={styles.price}>{product.price?.formattedValue}</Text>
           <Pressable style={styles.addToCartButton}>
             <FontAwesome name="cart-plus" size={24} color="#fff" />
             <Text style={styles.addToCartButtonText}>Add to cart</Text>

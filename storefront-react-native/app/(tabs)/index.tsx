@@ -1,16 +1,19 @@
-import { StyleSheet } from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
 
-import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { sdk } from '@/sdk/sdk.config';
+import { Product } from '@vsf-enterprise/sap-commerce-webservices-sdk';
+import ProductCard from '@/components/ProductCard';
 
-export default function TabOneScreen() {
+export default function ProductListingPage() {
+  const [products, setProducts] = useState<Product[] | undefined>(undefined);
+
   useEffect(() => {
     async function getProducts() {
-      const products = await sdk.sapcc.searchProduct({});
+      const { products } = await sdk.sapcc.searchProduct({});
 
-      console.log(products);
+      setProducts(products);
     }
 
     getProducts();
@@ -18,9 +21,14 @@ export default function TabOneScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+      <Text style={styles.title}>Products</Text>
+      <FlatList
+        data={products}
+        keyExtractor={(item) => item.code as string}
+        renderItem={({ item }) => (
+          <ProductCard product={item} />
+        )}
+      />
     </View>
   );
 }

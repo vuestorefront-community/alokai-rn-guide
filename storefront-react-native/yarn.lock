@@ -2248,7 +2248,7 @@
   dependencies:
     axios "1.6.8"
 
-"@vsf-enterprise/sap-commerce-webservices-sdk@^5.0.0":
+"@vsf-enterprise/sap-commerce-webservices-sdk@^5.0.0", "@vsf-enterprise/sap-commerce-webservices-sdk@^5.0.1":
   version "5.0.1"
   resolved "https://registrynpm.storefrontcloud.io/@vsf-enterprise%2fsap-commerce-webservices-sdk/-/sap-commerce-webservices-sdk-5.0.1.tgz#c7ca96af8fd3df913a72e39493d011b756c77be5"
   integrity sha512-q8/vHuw9Bl3/0GTW/7aKsLRT/cqEWMRzPurQp7MdeUdgamk9TT1ksxe2CdAXdLKXY0gCBEdE7uGqwvrnE9BVkA==
