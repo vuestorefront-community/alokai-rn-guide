@@ -18,12 +18,7 @@
     "strict": true,
     "target": "ES2019",
     "types": [
-      "@types/body-parser",
-      "@types/cookie-parser",
-      "@types/express",
-      "@types/cors",
-      "@types/morgan",
-      "jest"
+      "node"
     ],
     "rootDir": ".",
     "outDir": "lib"
