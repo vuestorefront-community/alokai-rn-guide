@@ -2,8 +2,20 @@ import { StyleSheet } from 'react-native';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
+import { useEffect } from 'react';
+import { sdk } from '@/sdk/sdk.config';
 
 export default function TabOneScreen() {
+  useEffect(() => {
+    async function getProducts() {
+      const products = await sdk.sapcc.searchProduct({});
+
+      console.log(products);
+    }
+
+    getProducts();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Tab One</Text>
