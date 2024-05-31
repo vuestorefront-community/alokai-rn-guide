@@ -18,6 +18,7 @@
     "@react-navigation/native": "^6.0.2",
     "@vsf-enterprise/sap-commerce-webservices-sdk": "^5.0.1",
     "@vsf-enterprise/sapcc-api": "^6.0.1",
+    "@vsf-enterprise/unified-api-sapcc": "^1.0.3",
     "@vue-storefront/sdk": "^3.0.0",
     "expo": "~51.0.8",
     "expo-font": "~12.0.5",

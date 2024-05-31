@@ -1,26 +1,25 @@
 import { Text, View } from "@/components/Themed";
 import useCart from "@/hooks/useCart";
 import { sdk } from "@/sdk/sdk.config";
-import { transformImageUrl } from "@/utils/transformImage";
+import { SfProduct } from "@/types/product";
 import { FontAwesome } from "@expo/vector-icons";
-import { Product } from "@vsf-enterprise/sap-commerce-webservices-sdk";
 import { useLocalSearchParams } from "expo-router"
 import { useEffect, useState } from "react";
 import { Alert, Dimensions, Image, Pressable, ScrollView, StyleSheet } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 
 export default function ProductScreen() {
-  const { product_code, product_title } = useLocalSearchParams();
-  const [product, setProduct] = useState<Product | null>(null);
+  const { product_code } = useLocalSearchParams();
+  const [product, setProduct] = useState<SfProduct | null>(null);
   const [loading, setLoading] = useState(false);
   const width = Dimensions.get("window").width;
   const { addToCart } = useCart();
 
   useEffect(() => {
     async function fetchProduct() {
-      const data = await sdk.sapcc.getProduct({ id: product_code as string });
+      const { product } = await sdk.commerce.getProductDetails({ id: product_code as string });
 
-      setProduct(data);
+      setProduct(product);
     }
 
     fetchProduct();
@@ -29,9 +28,6 @@ export default function ProductScreen() {
   if (!product) {
     return <Text>Loading...</Text>;
   }
-
-  const galleryImages = product?.images?.filter((image) => image.imageType === "GALLERY" && image.format === "product")
-    .map((image) => transformImageUrl(image.url as string)) as [] | string[];
 
   const addToCartFunction = async () => {
     setLoading(true);
@@ -54,10 +50,10 @@ export default function ProductScreen() {
             style={styles.imageContainer}
             width={width * 0.95}
             height={width * 0.8}
-            data={galleryImages}
+            data={product.gallery}
             renderItem={({ item }) => (
               <Image
-                source={{ uri: item }}
+                source={{ uri: item.url }}
                 style={{ width: width * 0.95, height: width * 0.8 }}
               />
             )}
@@ -65,10 +61,10 @@ export default function ProductScreen() {
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.textBold}>{product.name}</Text>
-          <Text style={styles.textBold}>{product.price?.formattedValue}</Text>
+          <Text style={styles.textBold}>{product.price?.value.amount}</Text>
         </View>
         <View style={styles.summaryContainer}>
-          <Text style={styles.summaryText}>{product?.summary}</Text>
+          <Text style={styles.summaryText}>{product?.description}</Text>
         </View>
         <Pressable style={{
           ...styles.addToCartButton,

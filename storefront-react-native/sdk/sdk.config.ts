@@ -1,9 +1,9 @@
 import { initSDK, buildModule, middlewareModule } from "@vue-storefront/sdk";
-import { Endpoints as SapccEndpoints } from "@vsf-enterprise/sapcc-api";
+import { Endpoints as UnifiedEndpoints } from "@vsf-enterprise/unified-api-sapcc";
 
 const sdkConfig = {
-  sapcc: buildModule(middlewareModule<SapccEndpoints>, {
-    apiUrl: "http://localhost:8181/sapcc",
+  commerce: buildModule(middlewareModule<UnifiedEndpoints>, {
+    apiUrl: "http://localhost:4000/commerce",
     cdnCacheBustingId: "",
   }),
 };

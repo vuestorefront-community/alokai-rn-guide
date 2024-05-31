@@ -4,6 +4,7 @@
   },
   "dependencies": {
     "@vsf-enterprise/sapcc-api": "^6.0.1",
+    "@vsf-enterprise/unified-api-sapcc": "^1.0.3",
     "@vue-storefront/middleware": "^4.0.1",
     "consola": "^3.2.3",
     "dotenv": "^16.4.5",

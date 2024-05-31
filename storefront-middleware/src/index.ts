@@ -1,27 +1,25 @@
-import { createServer } from '@vue-storefront/middleware';
-import { integrations } from '../middleware.config';
-const consola = require('consola');
-const cors = require('cors');
+import { type CreateServerOptions, createServer } from "@vue-storefront/middleware";
+import { config } from "../middleware.config";
 
-(async () => {
-  const app = await createServer({ integrations });
-  // By default it's running on the localhost.
-  const host = process.argv[2] ?? 'localhost';
-  // By default it's running on the port 8181.
-  const port = process.argv[3] ?? 8181;
-  const CORS_MIDDLEWARE_NAME = 'corsMiddleware';
+const developmentCorsConfig: CreateServerOptions["cors"] = {
+  origin: true,
+  credentials: true,
+};
+const port = Number(process.env.API_PORT) || 4000;
 
-  const corsMiddleware = app._router.stack.find(
-    (middleware: { name: string }) => middleware.name === CORS_MIDDLEWARE_NAME
-  );
+runApp();
 
-  // You can overwrite the cors settings by defining allowed origins.
-  corsMiddleware.handle = cors({
-    origin: ['http://localhost:3000'],
-    credentials: true
+async function runApp() {
+  const app = await createServer(config, {
+    cors: process.env.NODE_ENV === "development" ? developmentCorsConfig : undefined,
   });
 
-  app.listen(port, host, () => {
-    consola.success(`API server listening on http://${host}:${port}`);
+  app.listen(port, "", () => {
+    console.log(`API server listening on port ${port}`);
+
+    if (process.env.IS_MULTISTORE_ENABLED === "false") {
+      console.log("Multistore is not enabled");
+      return;
+    }
   });
-})();
+}

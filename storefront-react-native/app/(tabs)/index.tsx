@@ -3,15 +3,18 @@ import { FlatList, StyleSheet } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { useEffect, useState } from 'react';
 import { sdk } from '@/sdk/sdk.config';
-import { Product } from '@vsf-enterprise/sap-commerce-webservices-sdk';
 import ProductCard from '@/components/ProductCard';
+import { SfProductCatalogItem } from '@/types/product';
 
 export default function ProductListingPage() {
-  const [products, setProducts] = useState<Product[] | undefined>(undefined);
+  const [products, setProducts] = useState<SfProductCatalogItem[] | undefined>(undefined);
 
   useEffect(() => {
     async function getProducts() {
-      const { products } = await sdk.sapcc.searchProduct({});
+      const { products } = await sdk.commerce.getProducts({});
+
+      console.log(products);
+      console.log('ey')
 
       setProducts(products);
     }
@@ -24,7 +27,7 @@ export default function ProductListingPage() {
       <Text style={styles.title}>Products</Text>
       <FlatList
         data={products}
-        keyExtractor={(item) => item.code as string}
+        keyExtractor={(item) => item.id as string}
         renderItem={({ item }) => (
           <ProductCard product={item} />
         )}
