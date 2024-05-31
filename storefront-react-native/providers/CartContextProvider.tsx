@@ -1,5 +1,7 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Cart } from "@vsf-enterprise/sap-commerce-webservices-sdk";
 import { createContext, useEffect, useState } from "react";
+import { sdk } from "@/sdk/sdk.config";
 
 export const CartContext = createContext<{
   cart: Cart;
@@ -11,16 +13,15 @@ export const CartContext = createContext<{
 
 export default function CartContextProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<Cart>({} as Cart);
-  const sdk = useSdk();
 
   useEffect(() => {
     async function getCart() {
-      let cart = JSON.parse(localStorage.getItem("cart") as string);
+      let cart = JSON.parse(await AsyncStorage.getItem("cart") as string);
 
       if (!cart) {
         cart = await sdk.sapcc.createCart();
 
-        localStorage.setItem("cart", JSON.stringify(cart));
+        await AsyncStorage.setItem("cart", JSON.stringify(cart));
       }
       setCart(cart);
     }
@@ -28,10 +29,10 @@ export default function CartContextProvider({ children }: { children: React.Reac
     getCart();
   }, []);
 
-  function updateCart(updatedCart: Cart) {
+  async function updateCart(updatedCart: Cart) {
     setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    await AsyncStorage.setItem("cart", JSON.stringify(updatedCart));
   }
 
-  return <CartContext.Provider value={{ cart, updateCart }} > {children} </CartContext.Provider>;
+  return <CartContext.Provider value={{ cart, updateCart }}>{children}</CartContext.Provider>;
 }

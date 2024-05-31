@@ -1,16 +1,19 @@
 import { Text, View } from "@/components/Themed";
+import useCart from "@/hooks/useCart";
 import { sdk } from "@/sdk/sdk.config";
 import { transformImageUrl } from "@/utils/transformImage";
 import { Product } from "@vsf-enterprise/sap-commerce-webservices-sdk";
 import { useLocalSearchParams } from "expo-router"
 import { useEffect, useState } from "react";
-import { Dimensions, Image, ScrollView, StyleSheet } from "react-native";
+import { Dimensions, Image, Pressable, ScrollView, StyleSheet } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 
 export default function ProductScreen() {
   const { product_code } = useLocalSearchParams();
   const [product, setProduct] = useState<Product | null>(null);
   const width = Dimensions.get("window").width;
+
+  const { addToCart } = useCart();
 
   useEffect(() => {
     async function fetchProduct() {
@@ -58,6 +61,9 @@ export default function ProductScreen() {
         <View style={styles.summaryContainer}>
           <Text style={styles.summaryText}>{product?.summary}</Text>
         </View>
+        <Pressable onPress={() => addToCart(product)}>
+          <Text>Add to cart</Text>
+        </Pressable>
       </View>
     </ScrollView>
   )
