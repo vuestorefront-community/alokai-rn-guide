@@ -2,17 +2,18 @@ import { Text, View } from "@/components/Themed";
 import useCart from "@/hooks/useCart";
 import { sdk } from "@/sdk/sdk.config";
 import { transformImageUrl } from "@/utils/transformImage";
+import { FontAwesome } from "@expo/vector-icons";
 import { Product } from "@vsf-enterprise/sap-commerce-webservices-sdk";
 import { useLocalSearchParams } from "expo-router"
 import { useEffect, useState } from "react";
-import { Dimensions, Image, Pressable, ScrollView, StyleSheet } from "react-native";
+import { Alert, Dimensions, Image, Pressable, ScrollView, StyleSheet } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 
 export default function ProductScreen() {
-  const { product_code } = useLocalSearchParams();
+  const { product_code, product_title } = useLocalSearchParams();
   const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(false);
   const width = Dimensions.get("window").width;
-
   const { addToCart } = useCart();
 
   useEffect(() => {
@@ -32,10 +33,18 @@ export default function ProductScreen() {
   const galleryImages = product?.images?.filter((image) => image.imageType === "GALLERY" && image.format === "product")
     .map((image) => transformImageUrl(image.url as string)) as [] | string[];
 
+  const addToCartFunction = async () => {
+    setLoading(true);
+    await addToCart(product);
+    setLoading(false);
+    Alert.alert("Product added to cart");
+  }
+
   return (
     <ScrollView style={styles.page}>
       <View style={{
         ...styles.container,
+        backgroundColor: loading ? '#e5e5e5' : '#fff',
       }}>
         <View>
           <Carousel
@@ -61,8 +70,12 @@ export default function ProductScreen() {
         <View style={styles.summaryContainer}>
           <Text style={styles.summaryText}>{product?.summary}</Text>
         </View>
-        <Pressable onPress={() => addToCart(product)}>
-          <Text>Add to cart</Text>
+        <Pressable style={{
+          ...styles.addToCartButton,
+          backgroundColor: loading ? '#a5a5a5' : '#0d7f3f',
+        }} onPress={addToCartFunction}>
+          {loading ? <FontAwesome name="spinner" size={24} color="#fff" /> : <FontAwesome name="cart-plus" size={24} color="#fff" />}
+          <Text style={styles.addToCartButtonText}>{loading ? 'Adding to cart...' : 'Add to cart'}</Text>
         </Pressable>
       </View>
     </ScrollView>
@@ -100,5 +113,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 20,
     color: "#666",
+  },
+  addToCartButton: {
+    marginTop: 16,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#0d7f3f',
+    padding: 12,
+    borderRadius: 12,
+  },
+  addToCartButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 })

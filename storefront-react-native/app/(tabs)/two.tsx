@@ -1,14 +1,24 @@
 import { StyleSheet } from 'react-native';
-
-import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
+import useCart from '@/hooks/useCart';
 
-export default function TabTwoScreen() {
+export default function CartPage() {
+  const { cart } = useCart();
+
+  if (cart.entries && cart.entries.length === 0) {
+    return <Text>No items in cart</Text>;
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/two.tsx" />
+      <Text style={styles.heading}>Total {cart.totalItems} items</Text>
+      {cart.entries && cart.entries.map((entry) => (
+        <View key={entry.product?.code} style={styles.itemContainer}>
+          <Text>- {entry.quantity} x {entry.product?.name}</Text>
+          <Text>Total: {entry.totalPrice?.formattedValue}</Text>
+        </View>
+      ))}
+      <Text style={styles.heading}>Grand Total: {cart.totalPrice?.formattedValue}</Text>
     </View>
   );
 }
@@ -16,16 +26,17 @@ export default function TabTwoScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 20,
   },
-  title: {
-    fontSize: 20,
+  heading: {
+    fontSize: 24,
     fontWeight: 'bold',
+    marginBottom: 16,
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
+  itemContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 4,
+    marginBottom: 16,
+  }
 });
