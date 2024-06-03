@@ -5,20 +5,20 @@ import useCart from '@/hooks/useCart';
 export default function CartPage() {
   const { cart } = useCart();
 
-  if (cart.entries && cart.entries.length === 0) {
+  if (cart.lineItems && cart.lineItems.length === 0) {
     return <Text>No items in cart</Text>;
   }
 
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Total {cart.totalItems} items</Text>
-      {cart.entries && cart.entries.map((entry) => (
-        <View key={entry.product?.code} style={styles.itemContainer}>
-          <Text>- {entry.quantity} x {entry.product?.name}</Text>
-          <Text>Total: {entry.totalPrice?.formattedValue}</Text>
+      {cart.lineItems && cart.lineItems.map((entry) => (
+        <View key={entry.productId} style={styles.itemContainer}>
+          <Text>- {entry.quantity} x {entry.name}</Text>
+          <Text>Total: {entry.totalPrice?.currency}{entry.totalPrice?.amount}</Text>
         </View>
       ))}
-      <Text style={styles.heading}>Grand Total: {cart.totalPrice?.formattedValue}</Text>
+      <Text style={styles.heading}>Grand Total: {cart.totalPrice.currency}{cart.totalPrice?.amount}</Text>
     </View>
   );
 }

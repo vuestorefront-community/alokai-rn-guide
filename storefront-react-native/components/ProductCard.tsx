@@ -17,7 +17,7 @@ export default function ProductCard({
     }}>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image source={{ uri: transformImageUrl(product.primaryImage?.url!) }} style={styles.image} />
+          <Image source={{ uri: product.primaryImage?.url }} style={styles.image} />
         </View>
         <View style={styles.detailsContainer}>
           <Text style={styles.title}>{product.name}</Text>

@@ -11,10 +11,9 @@ export default function ProductListingPage() {
 
   useEffect(() => {
     async function getProducts() {
-      const { products } = await sdk.commerce.getProducts({});
+      const { products } = await sdk.commerce.searchProducts({});
 
       console.log(products);
-      console.log('ey')
 
       setProducts(products);
     }
